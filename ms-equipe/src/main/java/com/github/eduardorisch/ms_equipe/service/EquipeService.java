@@ -1,9 +1,11 @@
 package com.github.eduardorisch.ms_equipe.service;
 
+import com.github.eduardorisch.ms_equipe.cliente.OcorrenciaClient;
 import com.github.eduardorisch.ms_equipe.dtos.EquipeRequestDto;
 import com.github.eduardorisch.ms_equipe.dtos.EquipeResponseDto;
 import com.github.eduardorisch.ms_equipe.entity.Equipe;
 import com.github.eduardorisch.ms_equipe.enums.Status;
+import com.github.eduardorisch.ms_equipe.exceptions.BusinessRuleException;
 import com.github.eduardorisch.ms_equipe.exceptions.ResourceNotFoundException;
 import com.github.eduardorisch.ms_equipe.repositories.EquipeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -20,8 +22,8 @@ public class EquipeService {
     @Autowired
     private EquipeRepository repository;
 
-    //@Autowired
-    //private OcorrenciaClient client;
+    @Autowired
+    private OcorrenciaClient client;
 
     @Transactional(readOnly = true)
     public List<EquipeResponseDto> findAllEquipes() {
@@ -75,50 +77,46 @@ public class EquipeService {
         repository.deleteById(id);
     }
 
-//    public EquipeResponseDto assumirOcorrencia(Long equipeId, Long ocorrenciaId) {
-//        Equipe equipe = repository.findById(equipeId).orElseThrow(
-//                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + equipeId)
-//        );
-//
-//        OcorrenciaResponseDto ocorrencia = client.findOcorrenciaById(ocorrenciaId);
-//
-//        if (equipe.getStatus() != Status.DISPONIVEL) {
-//            throw new RegraNegocioException("A equipe não está disponível");
-//        }
-//
-//        if (!"ABERTA".equals(ocorrencia.getStatus())) {
-//            throw new RegraNegocioException("A ocorrência não está aberta");
-//        }
-//
-//        if (!equipe.getEspecialidade().equalsIgnoreCase(ocorrencia.getCategoria())) {
-//            throw new RegraNegocioException("A equipe não atende a categoria da ocorrência");
-//        }
-//
-//        client.atribuirEquipe(ocorrenciaId, equipeId);
-//
-//        equipe.setOcorrenciaId(ocorrenciaId);
-//        equipe.setStatus(Status.EM_ATENDIMENTO);
-//        equipe = repository.save(equipe);
-//        return new EquipeResponseDto(equipe);
-//    }
-//
-//    public EquipeResponseDto finalizar(Long id) {
-//
-//        Equipe equipe = repository.findById(id).orElseThrow(
-//                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + id)
-//        );
-//
-//        if (equipe.getStatus() != Status.EM_ATENDIMENTO || equipe.getOcorrenciaId() == null) {
-//            throw new RegraNegocioException("A equipe não está atendendo nenhuma ocorrência");
-//        }
-//
-//        client.finalizar(equipe.getOcorrenciaId());
-//
-//        equipe.setOcorrenciaId(null);
-//        equipe.setStatus(Status.DISPONIVEL);
-//        equipe = repository.save(equipe);
-//        return new EquipeResponseDto(equipe);
-//    }
+    public EquipeResponseDto assumirOcorrencia(Long equipeId, Long ocorrenciaId) {
+        Equipe equipe = repository.findById(equipeId).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + equipeId)
+        );
+
+        String categoriaOcorrencia = client.retornarCategoria(ocorrenciaId);
+
+        if (equipe.getStatus() != Status.DISPONIVEL) {
+            throw new BusinessRuleException("A equipe não está disponível");
+        }
+
+        if (!equipe.getEspecialidade().equalsIgnoreCase(categoriaOcorrencia)) {
+            throw new BusinessRuleException("A equipe não atende a categoria da ocorrência");
+        }
+
+        client.atribuirEquipe(ocorrenciaId, equipeId);
+
+        equipe.setOcorrenciaId(ocorrenciaId);
+        equipe.setStatus(Status.EM_ATENDIMENTO);
+        equipe = repository.save(equipe);
+        return new EquipeResponseDto(equipe);
+    }
+
+    public EquipeResponseDto finalizar(Long id) {
+
+        Equipe equipe = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + id)
+        );
+
+        if (equipe.getStatus() != Status.EM_ATENDIMENTO || equipe.getOcorrenciaId() == null) {
+            throw new BusinessRuleException("A equipe não está atendendo nenhuma ocorrência");
+        }
+
+        client.finalizar(equipe.getOcorrenciaId());
+
+        equipe.setOcorrenciaId(null);
+        equipe.setStatus(Status.DISPONIVEL);
+        equipe = repository.save(equipe);
+        return new EquipeResponseDto(equipe);
+    }
 
     private void mapDtoToEquipe(EquipeRequestDto dto, Equipe equipe) {
 

@@ -34,7 +34,7 @@ public class EquipeController {
     }
 
     @PostMapping
-    public ResponseEntity<EquipeResponseDto> saveOcorrencia(@Valid @RequestBody EquipeRequestDto dto){
+    public ResponseEntity<EquipeResponseDto> saveEquipe(@Valid @RequestBody EquipeRequestDto dto){
         EquipeResponseDto responseDto = service.saveEquipe(dto);
 
         URI uri = ServletUriComponentsBuilder
@@ -46,7 +46,7 @@ public class EquipeController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<EquipeResponseDto> updateOcorrencia(@PathVariable Long id,
+    public ResponseEntity<EquipeResponseDto> updateEquipe(@PathVariable Long id,
                                                                   @Valid @RequestBody EquipeRequestDto dto){
         EquipeResponseDto responseDto = service.updateEquipe(id, dto);
 
@@ -54,9 +54,17 @@ public class EquipeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOcorrencia(@PathVariable Long id){
+    public ResponseEntity<Void> deleteEquipe(@PathVariable Long id){
         service.deleteEquipeById(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{equipeId}/assumir/{ocorrenciaId}")
+    public ResponseEntity<EquipeResponseDto> assumirOcorrencia (@PathVariable Long equipeId,
+                                                @PathVariable Long ocorrenciaId){
+        EquipeResponseDto responseDto = service.assumirOcorrencia(equipeId, ocorrenciaId);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

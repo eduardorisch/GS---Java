@@ -85,20 +85,29 @@ public class OcorrenciaService {
     }
 
     @Transactional
-    public void finalizar(Long ocorrenciaId) {
-        Ocorrencia ocorrencia = repository.findById(ocorrenciaId).orElseThrow(
-                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + ocorrenciaId));
+    public void finalizar(Long id) {
+        Ocorrencia ocorrencia = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + id));
 
         if (ocorrencia.getStatus() == Status.RESOLVIDA) {
             return;
         }
 
         if (ocorrencia.getStatus() != Status.EM_ATENDIMENTO) {
-            throw new BusinessRuleException("Só é possível finalizar uma ocorrência EM_ATENDIMENTO");
+            throw new BusinessRuleException("Só é possível finalizar uma ocorrência em atendimento");
         }
 
         ocorrencia.setStatus(Status.RESOLVIDA);
         repository.save(ocorrencia);
+    }
+
+    @Transactional
+    public String retornarCategoriaOcorrencia(Long id){
+        Ocorrencia ocorrencia = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + id)
+        );
+
+        return ocorrencia.getCategoria();
     }
 
     private void mapDtoToOcorrencia(OcorrenciaRequestDto dto, Ocorrencia ocorrencia) {

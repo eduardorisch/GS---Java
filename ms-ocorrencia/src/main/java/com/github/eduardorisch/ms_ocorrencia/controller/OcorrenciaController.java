@@ -74,4 +74,9 @@ public class OcorrenciaController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/categoria")
+    public ResponseEntity<String> retornarCategoria(@PathVariable Long id){
+        return ResponseEntity.ok(service.retornarCategoriaOcorrencia(id));
+    }
 }
