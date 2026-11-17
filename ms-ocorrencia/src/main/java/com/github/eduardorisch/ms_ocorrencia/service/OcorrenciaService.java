@@ -76,7 +76,7 @@ public class OcorrenciaService {
                 () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + ocorrenciaId));
 
         if (ocorrencia.getStatus() != Status.ABERTA) {
-            throw new BusinessRuleException("Só é possível atribuir equipe a uma ocorrência ABERTA");
+            throw new BusinessRuleException("Só é possível atribuir equipe a uma ocorrência aberta");
         }
 
         ocorrencia.setEquipeId(equipeId);

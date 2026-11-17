@@ -101,7 +101,6 @@ public class EquipeService {
     }
 
     public EquipeResponseDto finalizar(Long id) {
-
         Equipe equipe = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Recurso não encontrado. ID: " + id)
         );
