@@ -1,6 +1,6 @@
 package com.github.eduardorisch.ms_equipe.service;
 
-import com.github.eduardorisch.ms_equipe.cliente.OcorrenciaClient;
+import com.github.eduardorisch.ms_equipe.client.OcorrenciaClient;
 import com.github.eduardorisch.ms_equipe.dtos.EquipeRequestDto;
 import com.github.eduardorisch.ms_equipe.dtos.EquipeResponseDto;
 import com.github.eduardorisch.ms_equipe.entity.Equipe;
