@@ -26,8 +26,6 @@ O **ZeladoriaPovo** é uma plataforma colaborativa de zeladoria de espaços púb
 3. Ao concluir o serviço, a equipe **finaliza** a ocorrência. A ocorrência vira **RESOLVIDA** e a equipe volta a **DISPONIVEL** e o ocorrencia_id fica nulo.
 4. Se o `ms-ocorrencia` estiver fora do ar, o Circuit Breaker aciona o **fallback**: a equipe continua disponível, nada é alterado e a API devolve uma mensagem.
 
-O status de cada entidade só muda por esse fluxo, por meio da **comunicação síncrona** entre os microsserviços.
-
 ### ODS relacionados
 
 - **ODS 11:** Cidades e comunidades sustentáveis
@@ -37,19 +35,7 @@ O status de cada entidade só muda por esse fluxo, por meio da **comunicação s
 ---
 
 ## 4. Pré-requisitos
-
-|Ferramenta|Versão|Para quê|
-|---|---|---|
-|**Docker Desktop** (com Docker Compose)|recente|MySQL e execução em containers|
-|**Git**|qualquer|clonar o repositório|
-|**JDK 25**|25|somente para executar fora do Docker|
-|**Maven**|3.9+|somente para executar fora do Docker (ou o IntelliJ IDEA)|
-
-Portas livres na máquina: **3306, 8761, 8082** (e **8081, 8083** na execução com Docker).
-
 Clone o repositório:
-
-bash
 
 ```bash
 git clone https://github.com/eduardorisch/GS---Java.git
@@ -68,7 +54,7 @@ docker build -t ms-ocorrencia:latest ./ms-ocorrencia
 docker build -t ms-equipe:latest ./ms-equipe
 ```
 
-**2. Criar a rede Docker** (se ela já existir, o Docker avisa que existe, e isso não é problema):
+**2. Criar a rede Docker**:
 ```bash
 docker network create microservices-net
 ```
@@ -77,3 +63,13 @@ docker network create microservices-net
 ```bash
 docker compose up -d
 ```
+
+**4. Depois disso podera testar com o swagger os Microserviços**
+
+**Microserviço de Equipes**
+
+http://localhost:8083/swagger-ui/index.html 
+
+**Microserviço de Ocorrências**
+
+http://localhost:8081/swagger-ui/index.html
