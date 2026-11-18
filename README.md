@@ -5,9 +5,6 @@
 | Eduardo Augusto Risch | 555212 |
 | Davi Queiroz Santos   | 557483 |
 
-
-Repositório: https://github.com/eduardorisch/GS---Java
-
 ---
 
 ## 2. O problema
