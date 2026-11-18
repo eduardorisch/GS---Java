@@ -52,7 +52,6 @@ services:
 
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/ocorrencias?createDatabaseIfNotExist=true&serverTimezone=UTC
 
     networks:
@@ -70,7 +69,6 @@ services:
 
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SERVER_PORT=8080
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysqldb:3306/equipes?createDatabaseIfNotExist=true&serverTimezone=UTC
 
     networks:
